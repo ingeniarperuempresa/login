@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import google.generativeai as gen_ai
 
 # Configuración de la página
 st.set_page_config(
@@ -7,6 +8,8 @@ st.set_page_config(
     page_icon="📊",
     layout="wide",
 )
+GOOGLE_API_KEY = st.secrets["GOOGLE_API_KEY"]
+gen_ai.configure(api_key=GOOGLE_API_KEY)
 
 # ID del Google Sheet
 gsheet_id = '1z27zAFC-b16WC4s3EF9N9vN7Uf2dM-bkO_l4N7kUCJQ'
@@ -55,6 +58,9 @@ with st.sidebar:
 
 # Mostrar el mensaje personalizado solo si el usuario está logueado
 if st.session_state.get("logged_in"):
-    st.write(f"Hola {st.session_state.nombre}, tu sueño es: {st.session_state.sueños}.")
+    st.write(f"Hola {st.session_state.nombre}")
+    st.write(f"¡Listo para seguir cumpliendo nuevos retos!")
+    
+    
 else:
     st.warning("👈 Despliega el panel lateral para iniciar sesión.")
