@@ -23,12 +23,3 @@ df = pd.read_csv(url)
 st.write("Datos de Google Sheets:")
 st.dataframe(df, use_container_width=True)
 
-# Graficar alguna de las columnas (ejemplo: contar las ocurrencias de "sueños")
-if 'sueños' in df.columns:
-    sueño_counts = df['sueños'].value_counts().reset_index()
-    sueño_counts.columns = ['sueños', 'count']
-    
-    fig = px.bar(sueño_counts, x='sueños', y='count', title='Frecuencia de Sueños')
-    st.plotly_chart(fig, use_container_width=True)
-else:
-    st.warning("La columna 'sueños' no se encuentra en los datos.")
