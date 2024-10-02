@@ -4,7 +4,7 @@ import plotly.express as px
 
 # Definimos los parámetros de configuración de la aplicación
 st.set_page_config(
-    page_title="Demo carga datos desde Google Sheets", #Título de la página
+    page_title="Inicio de Sesión", #Título de la página
     page_icon="📊", # Ícono
     layout="wide", # Forma de layout ancho o compacto
     initial_sidebar_state="expanded" # Definimos si el sidebar aparece expandido o colapsado
