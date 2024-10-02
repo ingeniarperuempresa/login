@@ -49,7 +49,7 @@ with st.sidebar:
     contraseña_input = st.text_input("Contraseña:", type="password")
     
     if st.button("Iniciar Sesión"):
-        nombre, sueños, time, hechos = verify_login(celular_input, contraseña_input)
+        nombre, sueños, time, hechos, objetivos, nivel = verify_login(celular_input, contraseña_input)
         if nombre:
             st.session_state.logged_in = True
             st.session_state.nombre = nombre
