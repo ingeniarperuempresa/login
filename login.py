@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px 
 
 # Configuración de la página
 st.set_page_config(
@@ -19,7 +18,28 @@ url = f'https://docs.google.com/spreadsheets/d/{gsheet_id}/export?format=csv&gid
 # Leer los datos del Google Sheet
 df = pd.read_csv(url)
 
-# Mostrar los datos en la aplicación
-st.write("Datos de Google Sheets:")
-st.dataframe(df, use_container_width=True)
+# Función para verificar las credenciales
+def verify_login(celular, contraseña):
+    user_data = df[(df['celular'] == celular) & (df['contraseña'] == contraseña)]
+    return not user_data.empty
 
+# Barra lateral para el inicio de sesión
+with st.sidebar:
+    st.header("Inicio de Sesión")
+    celular_input = st.text_input("Número de Celular:", type="text")
+    contraseña_input = st.text_input("Contraseña:", type="password")
+    
+    if st.button("Iniciar Sesión"):
+        if verify_login(celular_input, contraseña_input):
+            st.session_state.logged_in = True
+            st.success("¡Inicio de sesión exitoso!")
+        else:
+            st.error("Número de celular o contraseña incorrectos.")
+
+# Verificar si el usuario está logueado
+if st.session_state.get("logged_in"):
+    # Mostrar los datos en la aplicación
+    st.write("Datos de Google Sheets:")
+    st.dataframe(df, use_container_width=True)
+else:
+    st.warning("Por favor, inicia sesión para ver los datos.")
