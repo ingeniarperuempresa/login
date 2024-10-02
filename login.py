@@ -33,7 +33,7 @@ def verify_login(celular, contraseña):
 
 # Barra lateral para el inicio de sesión
 with st.sidebar:
-    st.image("logo2.png", width=100)  # Asegúrate de que la imagen esté en la ruta correcta
+    st.image("logo2.png", width=70)  # Asegúrate de que la imagen esté en la ruta correcta
     st.header("Inicio de Sesión")
     celular_input = st.text_input("Número de Celular:")
     contraseña_input = st.text_input("Contraseña:", type="password")
