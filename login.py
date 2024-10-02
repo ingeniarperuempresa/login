@@ -10,7 +10,7 @@ st.set_page_config(
     initial_sidebar_state="expanded" # Definimos si el sidebar aparece expandido o colapsado
 )
 
-gsheetid='1SHgetxf8JaTkgHFKhz78qX6V2Y6LXrRTVBIsFYL9xjE'
+gsheetid='1z27zAFC-b16WC4s3EF9N9vN7Uf2dM-bkO_l4N7kUCJQ'
 sheetid='0'
 url = f'https://docs.google.com/spreadsheets/d/{gsheetid}/export?format=csv&gid={sheetid}&format'
 st.write(url)
