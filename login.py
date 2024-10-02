@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import gen_ai  # Asegúrate de que este módulo esté correctamente instalado y accesible
 
 # Configuración de la página
 st.set_page_config(
@@ -48,46 +47,14 @@ with st.sidebar:
             st.session_state.time = time
             st.session_state.hechos = hechos
             st.success("¡Inicio de sesión exitoso!")
+            
+            # Aquí puedes agregar cualquier lógica que quieras después del inicio de sesión
+
         else:
             st.error("Número de celular o contraseña incorrectos.")
 
 # Mostrar el mensaje personalizado solo si el usuario está logueado
 if st.session_state.get("logged_in"):
     st.write(f"Hola {st.session_state.nombre}, tu sueño es: {st.session_state.sueños}.")
-    
-    # Análisis de niveles y objetivos
-    if st.button("Analizar Nivel y Objetivos"):
-        # Configura la generación
-        GOOGLE_API_KEY = st.secrets["GOOGLE_API_KEY"]
-        gen_ai.configure(api_key=GOOGLE_API_KEY)
-
-        # Preparar el prompt para la API de Gemini
-        prompt = f"""
-        Analiza los siguientes datos y determina en qué nivel se encuentra la persona del 1 al 5:
-        - Sueño: {st.session_state.sueños}
-        - Tiempo: {st.session_state.time}
-        - Hechos: {st.session_state.hechos}
-
-        Luego, elabora una lista de objetivos que debe cumplir para pasar al siguiente nivel.
-        """
-
-        try:
-            model = gen_ai.GenerativeModel(
-                model_name="gemini-1.5-flash",
-                generation_config={
-                    "temperature": 1,
-                    "top_p": 0.95,
-                    "top_k": 64,
-                    "max_output_tokens": 8192,
-                },
-                system_instruction="Eres un asistente que ayuda a analizar niveles y objetivos."
-            )
-
-            chat_session = model.start_chat(history=[])
-            gemini_response = chat_session.send_message(prompt)
-
-            st.markdown(f"## Análisis del Nivel:\n{gemini_response.text}")
-        except Exception as e:
-            st.error(f"Ocurrió un error al analizar: {str(e)}")
 else:
     st.warning("👈 Despliega el panel lateral para iniciar sesión.")
