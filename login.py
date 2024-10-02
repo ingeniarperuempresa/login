@@ -78,15 +78,17 @@ if st.session_state.get("logged_in"):
     else:
         # Generar objetivos si no hay metas
         prompt = f"Genera una lista de 7 objetivos que deba cumplir para lograr {st.session_state.sueños}."
+        
+        # Crear el modelo
         model = gen_ai.GenerativeModel(
             model_name="gemini-1.5-flash",
             generation_config=generation_config,
             system_instruction="Eres un planificador de metas que ayuda a las personas a cumplir sus objetivos."
         )
         
-        # Llamar al modelo y obtener la respuesta
-        gemini_response = model.generate(prompt)
-        
+        # Asegúrate de utilizar el método correcto para generar la respuesta
+        gemini_response = model.generate(prompt=prompt)  # Ajustar aquí si el método es diferente
+
         # Mostrar el contenido generado
         st.text_area("Objetivos Generados:", value=gemini_response.text, height=200, key="generated_content", help="Puedes copiar el texto generado seleccionándolo.", disabled=False)
 
