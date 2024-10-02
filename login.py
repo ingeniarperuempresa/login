@@ -22,15 +22,14 @@ df = pd.read_csv(url)
 df['celular'] = df['celular'].astype(str).str.replace(',', '').str.strip()
 df['contraseña'] = df['contraseña'].astype(str).str.strip()  # Limpiar la columna de contraseña también
 
-# Función para verificar las credenciales
+# Función para verificar las credenciales y obtener el nombre y sueño
 def verify_login(celular, contraseña):
-    
-    # Limpiar el celular ingresado
     celular_limpio = celular.replace(',', '').strip()
-    
     user_data = df[(df['celular'] == celular_limpio) & (df['contraseña'] == contraseña)]
     
-    return not user_data.empty
+    if not user_data.empty:
+        return user_data.iloc[0]['nombre'], user_data.iloc[0]['sueños']  # Retorna nombre y sueño
+    return None, None
 
 # Barra lateral para el inicio de sesión
 with st.sidebar:
@@ -39,15 +38,19 @@ with st.sidebar:
     contraseña_input = st.text_input("Contraseña:", type="password")
     
     if st.button("Iniciar Sesión"):
-        if verify_login(celular_input, contraseña_input):
+        nombre, sueños = verify_login(celular_input, contraseña_input)
+        if nombre:
             st.session_state.logged_in = True
+            st.session_state.nombre = nombre  # Guardar el nombre en la sesión
+            st.session_state.sueños = sueños  # Guardar el sueño en la sesión
             st.success("¡Inicio de sesión exitoso!")
         else:
             st.error("Número de celular o contraseña incorrectos.")
 
 # Verificar si el usuario está logueado
 if st.session_state.get("logged_in"):
-    # Mensaje de éxito y no mostrar datos
-    st.success("¡Inicio de sesión exitoso!")
+    # Mensaje personalizado
+    st.success(f"Hola {st.session_state.nombre}, tu sueño es: {st.session_state.sueños}.")
 else:
     st.warning("Por favor, inicia sesión para ver los datos.")
+
