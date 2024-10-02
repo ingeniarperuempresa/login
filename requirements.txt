@@ -1,3 +1,5 @@
 streamlit
 pandas
-plotly
+requests
+PyPDF2
+python-dotenv
