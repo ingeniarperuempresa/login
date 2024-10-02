@@ -19,7 +19,7 @@ url = f'https://docs.google.com/spreadsheets/d/{gsheet_id}/export?format=csv&gid
 df = pd.read_csv(url)
 
 # Limpiar la columna de celular: eliminar comas y convertir a string
-df['celular'] = df['celular'].astype(str).str.replace(',', '')
+df['celular'] = df['celular'].astype(str).str.replace(',', '').str.strip()
 
 # Función para verificar las credenciales
 def verify_login(celular, contraseña):
@@ -27,7 +27,10 @@ def verify_login(celular, contraseña):
     st.write(f"Comparando celular ingresado: {celular} con los datos en la tabla.")
     st.write(f"Comparando contraseña ingresada: {contraseña} con los datos en la tabla.")
     
-    user_data = df[(df['celular'] == celular) & (df['contraseña'] == contraseña)]
+    # Limpiar el celular ingresado
+    celular_limpio = celular.replace(',', '').strip()
+    
+    user_data = df[(df['celular'] == celular_limpio) & (df['contraseña'] == contraseña)]
     return not user_data.empty
 
 # Barra lateral para el inicio de sesión
