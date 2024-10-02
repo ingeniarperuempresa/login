@@ -33,6 +33,9 @@ df = pd.read_csv(url)
 df['celular'] = df['celular'].astype(str).str.replace(',', '').str.strip()
 df['contraseña'] = df['contraseña'].astype(str).str.strip()
 
+# Mostrar las columnas para debug
+st.write("Columnas disponibles en el DataFrame:", df.columns.tolist())
+
 # Función para verificar las credenciales y obtener el nombre y otros datos
 def verify_login(celular, contraseña):
     celular_limpio = celular.replace(',', '').strip()
@@ -68,5 +71,14 @@ with st.sidebar:
 if st.session_state.get("logged_in"):
     st.write(f"Hola {st.session_state.nombre}, actualmente estás en el nivel {st.session_state.nivel}.")
     st.write("¡Listo para seguir cumpliendo nuevos retos!")
+
+    # Mostrar las metas del usuario
+    if st.session_state.metas:
+        st.write("Tus metas son:")
+        for meta in st.session_state.metas.split(','):  # Asumiendo que las metas están separadas por comas
+            st.write(f"- {meta.strip()}")
+    else:
+        st.write("No tienes metas registradas.")
+
 else:
     st.warning("👈 Despliega el panel lateral para iniciar sesión.")
