@@ -80,7 +80,15 @@ if st.session_state.get("logged_in"):
         else:
             st.write("No se pudo procesar las metas.")
     else:
-        st.write("No tienes metas registradas.")
+        prompt = f"""
+            Genera una lista de 7 objetivos que deba cumplir si o si para lograr {st.session_state.sueños}"""
+         model = gen_ai.GenerativeModel(
+                    model_name="gemini-1.5-flash",
+                    generation_config=generation_config,
+                    system_instruction="Eres un planificador de metas para que las personas cumplan sus objetivos."
+                )
+         gemini_response = chat_session.send_message(prompt)
+         st.text_area("Texto generado:", value=gemini_response.text, height=200, key="generated_content", help="Puedes copiar el texto generado seleccionándolo.", disabled=False)
 
 else:
     st.warning("👈 Despliega el panel lateral para iniciar sesión.")
