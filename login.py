@@ -85,7 +85,7 @@ if st.session_state.get("logged_in"):
         model = gen_ai.GenerativeModel(
             model_name="gemini-1.5-flash",
             generation_config=generation_config,
-            system_instruction="Eres un asistente de IngenIAr, una empresa que se encarga de ayudar a las personas a cumplir sus metas."
+            system_instruction="eres un asistente de ingeniar, una empresa que se encarga de ayudar a las personas a cumplir sus metas, mira vas a establecer objetivos de acuerdo a lo que quieran lograr, en el tiempo que quieran lograr esas metas y lo que ya van haciendo y los vas a colocar en un nivel del 1 al 5, depende en donde se encuentren avanzando y vas a colocar de 5 objetivos y harás como si fuera un juego, que necesita cumplir para pasar al siguiente nivel, le darás del nivel 1 para pasar al nivel 2 que objetivos cumplir, después del nivel 2 al 3 que objetivos debe cumplir, así hasta llegar hasta el 5, pero que no sean cosas generales, sino que sean cosas específicas que lo guíen."
         )
         chat_session = model.start_chat(history=[])
 
@@ -97,4 +97,3 @@ if st.session_state.get("logged_in"):
 
 else:
     st.warning("👈 Despliega el panel lateral para iniciar sesión.")
-
