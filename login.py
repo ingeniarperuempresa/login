@@ -1,145 +1,53 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IngenIAr Registro</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 320px;
-        }
-        h1 {
-            text-align: center;
-            color: #ff6f20;
-        }
-        label {
-            margin-top: 10px;
-            display: block;
-            font-weight: bold;
-            color: #333;
-        }
-        input[type="text"], input[type="password"] {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        input[type="button"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 15px;
-            background-color: #ff6f20;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        input[type="button"]:hover {
-            background-color: #e65c00;
-        }
-        #message {
-            text-align: center;
-            margin-top: 10px;
-            color: #d9534f;
-        }
-        /* Estilos para la barra de carga */
-        #loading {
-            display: none;
-            text-align: center;
-            margin-top: 10px;
-            color: #333;
-        }
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #ff6f20;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>IngenIAr Registro</h1>
-        <form id="registerForm">
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" required>
+import streamlit as st
+import pandas as pd
 
-            <label for="celular">Celular:</label>
-            <input type="text" id="celular" name="celular" required>
+# Configuración de la página
+st.set_page_config(
+    page_title="Registro de IngenIAr",
+    page_icon="📊",
+    layout="wide",
+)
 
-            <label for="contraseña">Contraseña:</label>
-            <input type="password" id="contraseña" name="contraseña" required>
+# ID del Google Sheet
+gsheet_id = '1z27zAFC-b16WC4s3EF9N9vN7Uf2dM-bkO_l4N7kUCJQ'
+sheet_id = '0'  # Asumiendo que quieres la primera hoja
 
-            <label for="sueños">¿Qué quieres lograr?</label>
-            <input type="text" id="sueños" name="sueños">
+# URL para leer los datos en formato CSV
+url = f'https://docs.google.com/spreadsheets/d/{gsheet_id}/export?format=csv&gid={sheet_id}'
 
-            <label for="time">¿En qué tiempo lo quieres lograr?</label>
-            <input type="text" id="time" name="time">
+# Leer los datos del Google Sheet
+df = pd.read_csv(url)
 
-            <label for="hechos">¿Qué has hecho hasta ahora para lograrlos?</label>
-            <input type="text" id="hechos" name="hechos">
+# Limpiar la columna de celular: eliminar comas y convertir a string
+df['celular'] = df['celular'].astype(str).str.replace(',', '').str.strip()
+df['contraseña'] = df['contraseña'].astype(str).str.strip()  # Limpiar la columna de contraseña también
 
-            <input type="button" value="Registrar" onclick="registerUser()">
-        </form>
-        <p id="message"></p>
-        <div id="loading">
-            <div class="loader"></div>
-            <p>Cargando...</p>
-        </div>
-    </div>
+# Función para verificar las credenciales
+def verify_login(celular, contraseña):
+    
+    # Limpiar el celular ingresado
+    celular_limpio = celular.replace(',', '').strip()
+    
+    user_data = df[(df['celular'] == celular_limpio) & (df['contraseña'] == contraseña)]
+    
+    return not user_data.empty
 
-    <script>
-        function registerUser() {
-            const nombre = document.getElementById('nombre').value;
-            const celular = document.getElementById('celular').value;
-            const contraseña = document.getElementById('contraseña').value;
-            const sueños = document.getElementById('sueños').value;
-            const time = document.getElementById('time').value;
-            const hechos = document.getElementById('hechos').value;
+# Barra lateral para el inicio de sesión
+with st.sidebar:
+    st.header("Inicio de Sesión")
+    celular_input = st.text_input("Número de Celular:")
+    contraseña_input = st.text_input("Contraseña:", type="password")
+    
+    if st.button("Iniciar Sesión"):
+        if verify_login(celular_input, contraseña_input):
+            st.session_state.logged_in = True
+            st.success("¡Inicio de sesión exitoso!")
+        else:
+            st.error("Número de celular o contraseña incorrectos.")
 
-            // Mostrar la barra de carga
-            document.getElementById('loading').style.display = 'block';
-
-            google.script.run.withSuccessHandler(function(success) {
-                const message = document.getElementById('message');
-                // Ocultar la barra de carga
-                document.getElementById('loading').style.display = 'none';
-
-                if (success) {
-                    message.innerText = 'Registro exitoso!';
-                    message.style.color = '#5cb85c'; // Color de éxito
-                    document.getElementById('registerForm').reset(); // Limpiar el formulario
-                    // Redirigir a la página de destino
-                    window.location.href = 'https://panelingeniarperu.streamlit.app';
-                } else {
-                    message.innerText = 'Error en el registro.';
-                    message.style.color = '#d9534f'; // Color de error
-                }
-            }).registerUser(nombre, celular, contraseña, sueños, time, hechos);
-        }
-    </script>
-</body>
-</html>
-
+# Verificar si el usuario está logueado
+if st.session_state.get("logged_in"):
+    # Mensaje de éxito y no mostrar datos
+    st.success("¡Inicio de sesión exitoso!")
+else:
+    st.warning("Por favor, inicia sesión para ver los datos.")
