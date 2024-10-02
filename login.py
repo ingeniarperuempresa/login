@@ -33,9 +33,6 @@ df = pd.read_csv(url)
 df['celular'] = df['celular'].astype(str).str.replace(',', '').str.strip()
 df['contraseña'] = df['contraseña'].astype(str).str.strip()
 
-# Mostrar las columnas para debug
-st.write("Columnas disponibles en el DataFrame:", df.columns.tolist())
-
 # Función para verificar las credenciales y obtener el nombre y otros datos
 def verify_login(celular, contraseña):
     celular_limpio = celular.replace(',', '').strip()
