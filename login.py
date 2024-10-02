@@ -69,7 +69,7 @@ with st.sidebar:
 if st.session_state.get("logged_in"):
     st.write(f"Hola {st.session_state.nombre} actualmente estas en el nivel {st.session_state.nivel}")
     st.write(f"¡Listo para seguir cumpliendo nuevos retos!")
-    //implemntar algo que vea si la clomumna
+    #implemntar algo que vea si la clomumna
     
     
 else:
