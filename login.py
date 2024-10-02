@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
-import time
-import gen_ai  # Asegúrate de importar tu módulo de IA
+import gen_ai  # Asegúrate de que este módulo esté correctamente instalado y accesible
 
 # Configuración de la página
 st.set_page_config(
@@ -35,40 +34,43 @@ def verify_login(celular, contraseña):
 
 # Barra lateral para el inicio de sesión
 with st.sidebar:
-    st.image("logo2.png", width=70)
+    st.image("logo2.png", width=70)  # Asegúrate de que la imagen esté en la ruta correcta
     st.header("Inicio de Sesión")
     celular_input = st.text_input("Número de Celular:")
     contraseña_input = st.text_input("Contraseña:", type="password")
     
     if st.button("Iniciar Sesión"):
-        nombre, sueños, tiempo, hechos = verify_login(celular_input, contraseña_input)
+        nombre, sueños, time, hechos = verify_login(celular_input, contraseña_input)
         if nombre:
             st.session_state.logged_in = True
             st.session_state.nombre = nombre
             st.session_state.sueños = sueños
-            st.session_state.tiempo = tiempo
+            st.session_state.time = time
             st.session_state.hechos = hechos
             st.success("¡Inicio de sesión exitoso!")
         else:
             st.error("Número de celular o contraseña incorrectos.")
 
-# Funcionalidad adicional después de iniciar sesión
+# Mostrar el mensaje personalizado solo si el usuario está logueado
 if st.session_state.get("logged_in"):
     st.write(f"Hola {st.session_state.nombre}, tu sueño es: {st.session_state.sueños}.")
+    
+    # Análisis de niveles y objetivos
+    if st.button("Analizar Nivel y Objetivos"):
+        # Configura la generación
+        GOOGLE_API_KEY = st.secrets["GOOGLE_API_KEY"]
+        gen_ai.configure(api_key=GOOGLE_API_KEY)
 
-    # Prompt para la IA de Gemini
-    prompt = f"""
-    Analiza la situación del usuario basado en los siguientes datos:
-    - Sueños: {st.session_state.sueños}
-    - Tiempo: {st.session_state.tiempo}
-    - Hechos: {st.session_state.hechos}
+        # Preparar el prompt para la API de Gemini
+        prompt = f"""
+        Analiza los siguientes datos y determina en qué nivel se encuentra la persona del 1 al 5:
+        - Sueño: {st.session_state.sueños}
+        - Tiempo: {st.session_state.time}
+        - Hechos: {st.session_state.hechos}
 
-    Por favor, proporciona:
-    - Un nivel del 1 al 5 basado en la información anterior.
-    - Objetivos que el usuario debe cumplir para avanzar al siguiente nivel.
-    """
+        Luego, elabora una lista de objetivos que debe cumplir para pasar al siguiente nivel.
+        """
 
-    if st.button("Analizar con Gemini"):
         try:
             model = gen_ai.GenerativeModel(
                 model_name="gemini-1.5-flash",
@@ -78,23 +80,14 @@ if st.session_state.get("logged_in"):
                     "top_k": 64,
                     "max_output_tokens": 8192,
                 },
-                system_instruction="Eres un analista que proporciona evaluación de objetivos y niveles."
+                system_instruction="Eres un asistente que ayuda a analizar niveles y objetivos."
             )
 
             chat_session = model.start_chat(history=[])
-
-            # Barra de progreso
-            progress = st.progress(0)
-            for i in range(100):
-                time.sleep(0.05)  # Simulación de tiempo de espera
-                progress.progress(i + 1)
-
             gemini_response = chat_session.send_message(prompt)
 
-            st.markdown(f"### Respuesta de Gemini:\n{gemini_response.text}")
+            st.markdown(f"## Análisis del Nivel:\n{gemini_response.text}")
         except Exception as e:
-            st.error(f"Ocurrió un error al analizar la información: {str(e)}")
-
+            st.error(f"Ocurrió un error al analizar: {str(e)}")
 else:
     st.warning("👈 Despliega el panel lateral para iniciar sesión.")
-
