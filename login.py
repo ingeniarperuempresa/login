@@ -18,6 +18,9 @@ url = f'https://docs.google.com/spreadsheets/d/{gsheet_id}/export?format=csv&gid
 # Leer los datos del Google Sheet
 df = pd.read_csv(url)
 
+# Eliminar comas de los números de celular
+df['celular'] = df['celular'].astype(str).str.replace(',', '')
+
 # Función para verificar las credenciales
 def verify_login(celular, contraseña):
     user_data = df[(df['celular'] == celular) & (df['contraseña'] == contraseña)]
