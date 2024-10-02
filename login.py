@@ -79,13 +79,13 @@ if st.session_state.get("logged_in"):
             st.write(f"- {meta.strip()}")
     else:
         # Generar objetivos si no hay metas
-        prompt = f"Genera una lista de 7 objetivos que deba cumplir para lograr {st.session_state.sueños}."
+        prompt = f"{st.session_state.sueños} en el tiempo {st.session_state.time} y hasta ahora he hecho {st.session_state.hechos}."
         
         # Crear el modelo
         model = gen_ai.GenerativeModel(
             model_name="gemini-1.5-flash",
             generation_config=generation_config,
-            system_instruction="Eres un planificador de metas que ayuda a las personas a cumplir sus objetivos."
+            system_instruction="eres un asistnte de ingeniar, una empresa que se encarga de ayudar a las personas a cumplir sus metas, mira vas a establer objetivos de acuerdo a lo que quieran lograr, en el tiempo que quieran lograr esas metas  y lo que ya van haciendo  y los vas a colocar en un nivel del 1 al 5, depende en donde se encuentren avanzando y vas a colcar de 5 objetivos y haras como si fuera un juego, que necesita cumplir para pasar al suiguiente nivel, le daras del nivel 1 para pasar al nivel 2 que debe objetivos cumplir, despues del nivel 2 al 3 que objetivios debe cumplir, asi hasta llegar hasta el 5, pero que nosean cosas generales, sino que sean cosas especificas que lo guien ."
         )
         chat_session = model.start_chat(history=[])
 
