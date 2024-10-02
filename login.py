@@ -42,7 +42,7 @@ def verify_login(celular, contraseña):
     user_data = df[(df['celular'] == celular_limpio) & (df['contraseña'] == contraseña)]
     
     if not user_data.empty:
-        return user_data.iloc[0]['nombre'], user_data.iloc[0]['sueños'], user_data.iloc[0]['time'], user_data.iloc[0]['hechos'], user_data.iloc[0].get('nivel', None), user_data.iloc[0].get('objetivos', None)
+        return user_data.iloc[0]['nombre'], user_data.iloc[0]['sueños'], user_data.iloc[0]['time'], user_data.iloc[0]['hechos'], user_data.iloc[0].get('metas', None), user_data.iloc[0].get('nivel', None)
     return None, None, None, None, None, None
 
 # Barra lateral para el inicio de sesión
@@ -53,15 +53,15 @@ with st.sidebar:
     contraseña_input = st.text_input("Contraseña:", type="password")
     
     if st.button("Iniciar Sesión"):
-        nombre, sueños, time, hechos, nivel, objetivos = verify_login(celular_input, contraseña_input)
+        nombre, sueños, time, hechos, metas, nivel = verify_login(celular_input, contraseña_input)
         if nombre:
             st.session_state.logged_in = True
             st.session_state.nombre = nombre
             st.session_state.sueños = sueños
             st.session_state.time = time
             st.session_state.hechos = hechos
+            st.session_state.metas = metas
             st.session_state.nivel = nivel
-            st.session_state.objetivos = objetivos
             st.success("¡Inicio de sesión exitoso!")
             
         else:
