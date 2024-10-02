@@ -36,6 +36,11 @@ def verify_login(celular, contraseña):
     celular_limpio = celular.replace(',', '').strip()
     
     user_data = df[(df['celular'] == celular_limpio) & (df['contraseña'] == contraseña)]
+    
+    # Mostrar datos que se están comparando para depuración
+    st.write("Datos del usuario en la tabla:")
+    st.dataframe(user_data)
+    
     return not user_data.empty
 
 # Barra lateral para el inicio de sesión
