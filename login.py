@@ -18,8 +18,13 @@ url = f'https://docs.google.com/spreadsheets/d/{gsheet_id}/export?format=csv&gid
 # Leer los datos del Google Sheet
 df = pd.read_csv(url)
 
+# Mostrar los datos para depuración
+st.write("Datos cargados desde Google Sheets:")
+st.dataframe(df)
+
 # Limpiar la columna de celular: eliminar comas y convertir a string
 df['celular'] = df['celular'].astype(str).str.replace(',', '').str.strip()
+df['contraseña'] = df['contraseña'].astype(str).str.strip()  # Limpiar la columna de contraseña también
 
 # Función para verificar las credenciales
 def verify_login(celular, contraseña):
