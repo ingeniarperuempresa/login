@@ -51,4 +51,4 @@ with st.sidebar:
 if st.session_state.get("logged_in"):
     st.write(f"Hola {st.session_state.nombre}, tu sueño es: {st.session_state.sueños}.")
 else:
-    st.warning("👉 Despliega el panel lateral para iniciar sesión.")
+    st.warning("👈 Despliega el panel lateral para iniciar sesión.")
