@@ -52,4 +52,4 @@ if st.session_state.get("logged_in"):
     st.write(f"Hola {st.session_state.nombre}, tu sueño es: {st.session_state.sueños}.")
 else:
     st.warning("👈 Despliega el panel lateral para iniciar sesión.")
-    st.image("logo.png", width=100, height=50)  # Asegúrate de que la imagen esté en la ruta correcta
+    st.image("logo.png", width=100)  # Asegúrate de que la imagen esté en la ruta correcta
