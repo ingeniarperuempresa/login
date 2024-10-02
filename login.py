@@ -73,10 +73,15 @@ if st.session_state.get("logged_in"):
     st.write("¡Listo para seguir cumpliendo nuevos retos!")
 
     # Mostrar las metas del usuario
-    if st.session_state.metas:
-        st.write("Tus metas son:")
-        for meta in st.session_state.metas.split(','):  # Asumiendo que las metas están separadas por comas
-            st.write(f"- {meta.strip()}")
+    metas = st.session_state.get("metas")
+    if metas:
+        # Asegúrate de que metas sea una cadena
+        if isinstance(metas, str):
+            st.write("Tus metas son:")
+            for meta in metas.split(','):  # Asumiendo que las metas están separadas por comas
+                st.write(f"- {meta.strip()}")
+        else:
+            st.write("No se pudo procesar las metas.")
     else:
         st.write("No tienes metas registradas.")
 
