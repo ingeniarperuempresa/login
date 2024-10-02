@@ -26,7 +26,7 @@ def verify_login(celular, contraseña):
 # Barra lateral para el inicio de sesión
 with st.sidebar:
     st.header("Inicio de Sesión")
-    celular_input = st.text_input("Número de Celular:", type="text")
+    celular_input = st.text_input("Número de Celular:")
     contraseña_input = st.text_input("Contraseña:", type="password")
     
     if st.button("Iniciar Sesión"):
