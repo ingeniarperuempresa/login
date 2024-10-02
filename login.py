@@ -70,13 +70,11 @@ if st.session_state.get("logged_in"):
 
     # Mostrar las metas del usuario
     metas = st.session_state.get("metas")
-    if metas:
-        if isinstance(metas, str):
-            st.write("Tus metas son:")
-            for meta in metas.split(','):  # Asumiendo que las metas están separadas por comas
-                st.write(f"- {meta.strip()}")
-        else:
-            st.write("No se pudo procesar las metas.")
+    
+    if metas is not None and isinstance(metas, str) and metas.strip() != "":
+        st.write("Tus metas son:")
+        for meta in metas.split(','):  # Asumiendo que las metas están separadas por comas
+            st.write(f"- {meta.strip()}")
     else:
         # Generar objetivos si no hay metas
         prompt = f"Genera una lista de 7 objetivos que deba cumplir para lograr {st.session_state.sueños}."
