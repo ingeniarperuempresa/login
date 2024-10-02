@@ -47,10 +47,8 @@ with st.sidebar:
         else:
             st.error("Número de celular o contraseña incorrectos.")
 
-# Verificar si el usuario está logueado
+# Mostrar el mensaje personalizado solo si el usuario está logueado
 if st.session_state.get("logged_in"):
-    # Mensaje personalizado
-    st.success(f"Hola {st.session_state.nombre}, tu sueño es: {st.session_state.sueños}.")
+    st.write(f"Hola {st.session_state.nombre}, tu sueño es: {st.session_state.sueños}.")
 else:
     st.warning("Por favor, inicia sesión para ver los datos.")
-
