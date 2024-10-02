@@ -33,7 +33,7 @@ def verify_login(celular, contraseña):
 
 # Barra lateral para el inicio de sesión
 with st.sidebar:
-    st.image("logo2.png", width=70)  # Asegúrate de que la imagen esté en la ruta correcta
+    st.markdown("<div style='text-align: center;'><img src='logo2.png' width='70' /></div>", unsafe_allow_html=True)  # Centrar la imagen
     st.header("Inicio de Sesión")
     celular_input = st.text_input("Número de Celular:")
     contraseña_input = st.text_input("Contraseña:", type="password")
@@ -53,4 +53,3 @@ if st.session_state.get("logged_in"):
     st.write(f"Hola {st.session_state.nombre}, tu sueño es: {st.session_state.sueños}.")
 else:
     st.warning("👈 Despliega el panel lateral para iniciar sesión.")
-
