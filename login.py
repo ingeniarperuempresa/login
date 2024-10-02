@@ -10,6 +10,13 @@ st.set_page_config(
 )
 GOOGLE_API_KEY = st.secrets["GOOGLE_API_KEY"]
 gen_ai.configure(api_key=GOOGLE_API_KEY)
+generation_config = {
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "top_k": 64,
+    "max_output_tokens": 8192,
+}
+
 
 # ID del Google Sheet
 gsheet_id = '1z27zAFC-b16WC4s3EF9N9vN7Uf2dM-bkO_l4N7kUCJQ'
@@ -49,6 +56,8 @@ with st.sidebar:
             st.session_state.sueños = sueños
             st.session_state.time = time
             st.session_state.hechos = hechos
+            st.session_state.objetivos = objetivos
+            st.session_state.nivel = nivel
             st.success("¡Inicio de sesión exitoso!")
             
             # Aquí puedes agregar cualquier lógica que quieras después del inicio de sesión
@@ -58,8 +67,9 @@ with st.sidebar:
 
 # Mostrar el mensaje personalizado solo si el usuario está logueado
 if st.session_state.get("logged_in"):
-    st.write(f"Hola {st.session_state.nombre}")
+    st.write(f"Hola {st.session_state.nombre} actualmente estas en el nivel {st.session_state.nivel}")
     st.write(f"¡Listo para seguir cumpliendo nuevos retos!")
+    //implemntar algo que vea si la clomumna
     
     
 else:
