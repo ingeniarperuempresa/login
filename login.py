@@ -1,17 +1,14 @@
 import streamlit as st
-import pandas as pd
 import google.generativeai as gen_ai
 
 # Configuración de la página
-st.set_page_config(
-    page_title="Registro de IngenIAr",
-    page_icon="📊",
-    layout="wide",
-)
+st.set_page_config(page_title="Registro de IngenIAr", page_icon="📊", layout="wide")
 
 # Configurar la API de Google
 GOOGLE_API_KEY = st.secrets["GOOGLE_API_KEY"]
 gen_ai.configure(api_key=GOOGLE_API_KEY)
+
+# Configuración de generación
 generation_config = {
     "temperature": 0.7,
     "top_p": 0.95,
@@ -19,43 +16,24 @@ generation_config = {
     "max_output_tokens": 8192,
 }
 
-# ID del Google Sheet
-gsheet_id = '1z27zAFC-b16WC4s3EF9N9vN7Uf2dM-bkO_l4N7kUCJQ'
-sheet_id = '0'  # Asumiendo que quieres la primera hoja
-
-# URL para leer los datos en formato CSV
-url = f'https://docs.google.com/spreadsheets/d/{gsheet_id}/export?format=csv&gid={sheet_id}'
-
-# Leer los datos del Google Sheet
-df = pd.read_csv(url)
-
-# Limpiar las columnas
-df['celular'] = df['celular'].astype(str).str.replace(',', '').str.strip()
-df['contraseña'] = df['contraseña'].astype(str).str.strip()
-
-# Función para verificar las credenciales y obtener el nombre y otros datos
+# Función para verificar las credenciales
 def verify_login(celular, contraseña):
-    celular_limpio = celular.replace(',', '').strip()
-    user_data = df[(df['celular'] == celular_limpio) & (df['contraseña'] == contraseña)]
-    
-    if not user_data.empty:
-        return user_data.iloc[0]['nombre'], user_data.iloc[0]['sueños'], user_data.iloc[0]['time'], user_data.iloc[0]['hechos'], user_data.iloc[0].get('metas', None), user_data.iloc[0].get('nivel', None)
-    return None, None, None, None, None, None
+    # Aquí va la lógica para verificar el usuario (como lo tenías)
+    # Retorna el nombre, sueños, hechos, metas, nivel
+    return nombre, sueños, hechos, metas, nivel
 
-# Barra lateral para el inicio de sesión
+# Lógica del inicio de sesión
 with st.sidebar:
-    st.image("logo2.png", width=70)  # Asegúrate de que la imagen esté en la ruta correcta
     st.header("Inicio de Sesión")
     celular_input = st.text_input("Número de Celular:")
     contraseña_input = st.text_input("Contraseña:", type="password")
-    
+
     if st.button("Iniciar Sesión"):
-        nombre, sueños, time, hechos, metas, nivel = verify_login(celular_input, contraseña_input)
+        nombre, sueños, hechos, metas, nivel = verify_login(celular_input, contraseña_input)
         if nombre:
             st.session_state.logged_in = True
             st.session_state.nombre = nombre
             st.session_state.sueños = sueños
-            st.session_state.time = time
             st.session_state.hechos = hechos
             st.session_state.metas = metas
             st.session_state.nivel = nivel
@@ -76,21 +54,18 @@ if st.session_state.get("logged_in"):
             for meta in metas.split(','):
                 st.write(f"- {meta.strip()}")
     else:
-        # Generar objetivos si no hay metas
-        prompt = f"Genera una lista de 7 objetivos que deba cumplir si o si para lograr {st.session_state.sueños}."
+        prompt = f"Genera una lista de 7 objetivos que deba cumplir si o si para lograr {st.session_state.sueños}"
         try:
             model = gen_ai.GenerativeModel(
                 model_name="gemini-1.5-flash",
                 generation_config=generation_config,
-                system_instruction="Eres un planificador de metas para que las personas cumplan sus objetivos."
+                system_instruction="Eres un planificador de metas."
             )
-            gemini_response = model.generate(prompt)
-            if gemini_response and gemini_response.text:
-                st.text_area("Objetivos Generados:", value=gemini_response.text, height=200, key="generated_content", help="Puedes copiar el texto generado seleccionándolo.", disabled=False)
-            else:
-                st.write("No se pudieron generar objetivos.")
+            chat_session = model.start_chat(history=[])
+            gemini_response = chat_session.send_message(prompt)
+            st.write("Aquí tienes algunos objetivos generados:")
+            st.text_area("Objetivos generados:", value=gemini_response.text, height=200, disabled=False)
         except Exception as e:
-            st.error(f"Ocurrió un error al generar la respuesta: {e}")
-
+            st.error(f"Ocurrió un error al generar los objetivos: {str(e)}")
 else:
     st.warning("👈 Despliega el panel lateral para iniciar sesión.")
