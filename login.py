@@ -33,7 +33,7 @@ df = pd.read_csv(url)
 df['celular'] = df['celular'].astype(str).str.replace(',', '').str.strip()
 df['contraseña'] = df['contraseña'].astype(str).str.strip()
 
-# Función para verificar las credenciales y obtener el nombre y otros datos
+# Función para verificar las credenciales y obtener los datos del usuario
 def verify_login(celular, contraseña):
     celular_limpio = celular.replace(',', '').strip()
     user_data = df[(df['celular'] == celular_limpio) & (df['contraseña'] == contraseña)]
@@ -71,14 +71,15 @@ if st.session_state.get("logged_in"):
     # Mostrar las metas del usuario
     metas = st.session_state.get("metas")
     if metas:
-        # Asegúrate de que metas sea una cadena
         if isinstance(metas, str):
             st.write("Tus metas son:")
             for meta in metas.split(','):  # Asumiendo que las metas están separadas por comas
                 st.write(f"- {meta.strip()}")
         else:
             st.write("No se pudo procesar las metas.")
-              prompt = f"Genera una lista de 7 objetivos que deba cumplir para lograr {st.session_state.sueños}."
+    else:
+        # Generar objetivos si no hay metas
+        prompt = f"Genera una lista de 7 objetivos que deba cumplir para lograr {st.session_state.sueños}."
         model = gen_ai.GenerativeModel(
             model_name="gemini-1.5-flash",
             generation_config=generation_config,
@@ -90,7 +91,6 @@ if st.session_state.get("logged_in"):
         
         # Mostrar el contenido generado
         st.text_area("Objetivos Generados:", value=gemini_response.text, height=200, key="generated_content", help="Puedes copiar el texto generado seleccionándolo.", disabled=False)
-
 
 else:
     st.warning("👈 Despliega el panel lateral para iniciar sesión.")
