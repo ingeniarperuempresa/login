@@ -8,6 +8,8 @@ st.set_page_config(
     page_icon="📊",
     layout="wide",
 )
+
+# Configurar la API de Google
 GOOGLE_API_KEY = st.secrets["GOOGLE_API_KEY"]
 gen_ai.configure(api_key=GOOGLE_API_KEY)
 generation_config = {
@@ -16,7 +18,6 @@ generation_config = {
     "top_k": 64,
     "max_output_tokens": 8192,
 }
-
 
 # ID del Google Sheet
 gsheet_id = '1z27zAFC-b16WC4s3EF9N9vN7Uf2dM-bkO_l4N7kUCJQ'
@@ -32,14 +33,17 @@ df = pd.read_csv(url)
 df['celular'] = df['celular'].astype(str).str.replace(',', '').str.strip()
 df['contraseña'] = df['contraseña'].astype(str).str.strip()
 
-# Función para verificar las credenciales y obtener el nombre y sueño
+# Mostrar las columnas para debug
+st.write("Columnas disponibles en el DataFrame:", df.columns.tolist())
+
+# Función para verificar las credenciales y obtener el nombre y otros datos
 def verify_login(celular, contraseña):
     celular_limpio = celular.replace(',', '').strip()
     user_data = df[(df['celular'] == celular_limpio) & (df['contraseña'] == contraseña)]
     
     if not user_data.empty:
-        return user_data.iloc[0]['nombre'], user_data.iloc[0]['sueños'], user_data.iloc[0]['time'], user_data.iloc[0]['hechos']
-    return None, None, None, None
+        return user_data.iloc[0]['nombre'], user_data.iloc[0]['sueños'], user_data.iloc[0]['time'], user_data.iloc[0]['hechos'], user_data.iloc[0].get('nivel', None), user_data.iloc[0].get('objetivos', None)
+    return None, None, None, None, None, None
 
 # Barra lateral para el inicio de sesión
 with st.sidebar:
@@ -49,28 +53,23 @@ with st.sidebar:
     contraseña_input = st.text_input("Contraseña:", type="password")
     
     if st.button("Iniciar Sesión"):
-        nombre, sueños, time, hechos, objetivos, nivel = verify_login(celular_input, contraseña_input)
+        nombre, sueños, time, hechos, nivel, objetivos = verify_login(celular_input, contraseña_input)
         if nombre:
             st.session_state.logged_in = True
             st.session_state.nombre = nombre
             st.session_state.sueños = sueños
             st.session_state.time = time
             st.session_state.hechos = hechos
-            st.session_state.objetivos = objetivos
             st.session_state.nivel = nivel
+            st.session_state.objetivos = objetivos
             st.success("¡Inicio de sesión exitoso!")
             
-            # Aquí puedes agregar cualquier lógica que quieras después del inicio de sesión
-
         else:
             st.error("Número de celular o contraseña incorrectos.")
 
 # Mostrar el mensaje personalizado solo si el usuario está logueado
 if st.session_state.get("logged_in"):
-    st.write(f"Hola {st.session_state.nombre} actualmente estas en el nivel {st.session_state.nivel}")
-    st.write(f"¡Listo para seguir cumpliendo nuevos retos!")
-    #implemntar algo que vea si la clomumna
-    
-    
+    st.write(f"Hola {st.session_state.nombre}, actualmente estás en el nivel {st.session_state.nivel}.")
+    st.write("¡Listo para seguir cumpliendo nuevos retos!")
 else:
     st.warning("👈 Despliega el panel lateral para iniciar sesión.")
