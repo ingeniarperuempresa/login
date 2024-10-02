@@ -24,9 +24,7 @@ df['contraseña'] = df['contraseña'].astype(str).str.strip()  # Limpiar la colu
 
 # Función para verificar las credenciales
 def verify_login(celular, contraseña):
-    # Mostrar valores que se están comparando
-    st.write(f"Comparando celular ingresado: {celular} con los datos en la tabla.")
-    st.write(f"Comparando contraseña ingresada: {contraseña} con los datos en la tabla.")
+
     
     # Limpiar el celular ingresado
     celular_limpio = celular.replace(',', '').strip()
