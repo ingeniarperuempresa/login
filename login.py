@@ -35,7 +35,7 @@ def verify_login(celular, contraseña):
 
 # Barra lateral para el inicio de sesión
 with st.sidebar:
-    st.header("Inicio de Sesión")
+    st.header("Iniciar en IngenIAr")
     celular_input = st.text_input("Número de Celular:")
     contraseña_input = st.text_input("Contraseña:", type="password")
     
