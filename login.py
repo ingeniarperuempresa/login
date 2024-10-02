@@ -52,3 +52,4 @@ if st.session_state.get("logged_in"):
     st.write(f"Hola {st.session_state.nombre}, tu sueño es: {st.session_state.sueños}.")
 else:
     st.warning("👈 Despliega el panel lateral para iniciar sesión.")
+    st.image("imagen_de_iniciar_sesion.png", use_column_width=True)  # Cambia el nombre de la imagen según sea necesario
