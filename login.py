@@ -18,10 +18,6 @@ url = f'https://docs.google.com/spreadsheets/d/{gsheet_id}/export?format=csv&gid
 # Leer los datos del Google Sheet
 df = pd.read_csv(url)
 
-# Mostrar los datos para depuración
-st.write("Datos cargados desde Google Sheets:")
-st.dataframe(df)
-
 # Limpiar la columna de celular: eliminar comas y convertir a string
 df['celular'] = df['celular'].astype(str).str.replace(',', '').str.strip()
 df['contraseña'] = df['contraseña'].astype(str).str.strip()  # Limpiar la columna de contraseña también
@@ -36,10 +32,6 @@ def verify_login(celular, contraseña):
     celular_limpio = celular.replace(',', '').strip()
     
     user_data = df[(df['celular'] == celular_limpio) & (df['contraseña'] == contraseña)]
-    
-    # Mostrar datos que se están comparando para depuración
-    st.write("Datos del usuario en la tabla:")
-    st.dataframe(user_data)
     
     return not user_data.empty
 
@@ -58,8 +50,7 @@ with st.sidebar:
 
 # Verificar si el usuario está logueado
 if st.session_state.get("logged_in"):
-    # Mostrar los datos en la aplicación
-    st.write("Datos de Google Sheets:")
-    st.dataframe(df, use_container_width=True)
+    # Mensaje de éxito y no mostrar datos
+    st.success("¡Inicio de sesión exitoso!")
 else:
     st.warning("Por favor, inicia sesión para ver los datos.")
