@@ -12,6 +12,8 @@ st.set_page_config(
 # Configurar la API de Google
 GOOGLE_API_KEY = st.secrets["GOOGLE_API_KEY"]
 gen_ai.configure(api_key=GOOGLE_API_KEY)
+
+# Configuración de generación
 generation_config = {
     "temperature": 0.7,
     "top_p": 0.95,
@@ -86,11 +88,9 @@ if st.session_state.get("logged_in"):
             system_instruction="Eres un planificador de metas que ayuda a las personas a cumplir sus objetivos."
         )
         chat_session = model.start_chat(history=[])
+        
         # Asegúrate de utilizar el método correcto para generar la respuesta
         gemini_response = chat_session.send_message(prompt)
 
-        # Mostrar el contenido generado
-        st.text_area("Objetivos Generados:", value=gemini_response.text, height=200, key="generated_content", help="Puedes copiar el texto generado seleccionándolo.", disabled=False)
+        # Mostrar el contenido g
 
-else:
-    st.warning("👈 Despliega el panel lateral para iniciar sesión.")
