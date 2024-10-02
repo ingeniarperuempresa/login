@@ -75,9 +75,8 @@ if st.session_state.get("logged_in"):
             st.write("Tus metas son:")
             for meta in metas.split(','):
                 st.write(f"- {meta.strip()}")
-        else:
-            st.write("No se pudo procesar las metas.")
     else:
+        # Generar objetivos si no hay metas
         prompt = f"Genera una lista de 7 objetivos que deba cumplir si o si para lograr {st.session_state.sueños}."
         try:
             model = gen_ai.GenerativeModel(
@@ -86,7 +85,10 @@ if st.session_state.get("logged_in"):
                 system_instruction="Eres un planificador de metas para que las personas cumplan sus objetivos."
             )
             gemini_response = model.generate(prompt)
-            st.text_area("Texto generado:", value=gemini_response.text, height=200, key="generated_content", help="Puedes copiar el texto generado seleccionándolo.", disabled=False)
+            if gemini_response and gemini_response.text:
+                st.text_area("Objetivos Generados:", value=gemini_response.text, height=200, key="generated_content", help="Puedes copiar el texto generado seleccionándolo.", disabled=False)
+            else:
+                st.write("No se pudieron generar objetivos.")
         except Exception as e:
             st.error(f"Ocurrió un error al generar la respuesta: {e}")
 
