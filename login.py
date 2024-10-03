@@ -40,7 +40,12 @@ def verify_login(celular, contraseña):
     celular_limpio = celular.replace(',', '').strip()
     user_data = df[(df['celular'] == celular_limpio) & (df['contraseña'] == contraseña)]
     
+    # Depuración: mostrar los datos que se están buscando
+    st.write("Buscando datos para:", celular_limpio, "con contraseña:", contraseña)
+    st.write("Datos del DataFrame:", df)
+
     if not user_data.empty:
+        st.write("Usuario encontrado:", user_data)
         return (
             user_data.iloc[0]['nombre'],
             celular_limpio,
