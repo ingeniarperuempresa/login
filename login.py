@@ -41,8 +41,20 @@ def verify_login(celular, contraseña):
     user_data = df[(df['celular'] == celular_limpio) & (df['contraseña'] == contraseña)]
     
     if not user_data.empty:
-        return user_data.iloc[0]['nombre'], user_data.iloc[0]['sueños'], user_data.iloc[0]['time'], user_data.iloc[0]['hechos'], user_data.iloc[0].get('metas', None), user_data.iloc[0].get('nivel', None)
-    return None, None, None, None, None, None
+        return (
+            user_data.iloc[0]['nombre'],
+            celular_limpio,
+            user_data.iloc[0]['contraseña'],
+            user_data.iloc[0]['sueños'],
+            user_data.iloc[0]['time'],
+            user_data.iloc[0]['hechos'],
+            user_data.iloc[0].get('metas', None),
+            user_data.iloc[0].get('nivel', None),
+            user_data.iloc[0].get('promt', None),
+            user_data.iloc[0].get('promt2', None),
+            user_data.iloc[0].get('estado', None)
+        )
+    return (None,) * 11  # Devuelve 11 valores None si no se encuentra el usuario
 
 # Barra lateral para el inicio de sesión
 with st.sidebar:
@@ -63,7 +75,7 @@ with st.sidebar:
             st.session_state.nivel = nivel
             st.session_state.promt = promt
             st.session_state.promt2 = promt2
-            st.session_state_estado = estado 
+            st.session_state.estado = estado 
             st.success("¡Inicio de sesión exitoso!")
         else:
             st.error("Número de celular o contraseña incorrectos.")
