@@ -32,7 +32,7 @@ url = f'https://docs.google.com/spreadsheets/d/{gsheet_id}/export?format=csv&gid
 df = pd.read_csv(url)
 
 # Limpiar las columnas
-df['celular'] = df['celular'].astype(str).str.replace(',', '').str.strip()
+df['celular'] = df['celular'].astype(str).str.replace(',', '').str.strip().str.replace('.0', '')  # Convertir a string y eliminar ".0"
 df['contraseña'] = df['contraseña'].astype(str).str.strip()
 
 # Función para verificar las credenciales y obtener los datos del usuario
