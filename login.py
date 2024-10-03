@@ -52,7 +52,7 @@ with st.sidebar:
     contraseña_input = st.text_input("Contraseña:", type="password")
     
     if st.button("Iniciar Sesión"):
-        nombre, sueños, time, hechos, metas, nivel = verify_login(celular_input, contraseña_input)
+        nombre, celular, contraseña, sueños, time, hechos, metas, nivel, promt, promt2, estado = verify_login(celular_input, contraseña_input)
         if nombre:
             st.session_state.logged_in = True
             st.session_state.nombre = nombre
@@ -61,7 +61,9 @@ with st.sidebar:
             st.session_state.hechos = hechos
             st.session_state.metas = metas
             st.session_state.nivel = nivel
-            st.session_state.nivel = 
+            st.session_state.promt = promt
+            st.session_state.promt2 = promt2
+            st.session_state_estado = estado 
             st.success("¡Inicio de sesión exitoso!")
         else:
             st.error("Número de celular o contraseña incorrectos.")
