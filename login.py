@@ -33,7 +33,7 @@ df = pd.read_csv(url)
 
 # Limpiar las columnas
 df['celular'] = df['celular'].astype(str).str.replace(',', '').str.strip().str.replace('.0', '')  # Convertir a string y eliminar ".0"
-df['contraseña'] = df['contraseña'].astype(str).str.strip()
+df['contraseña'] = df['contraseña'].astype(str).str.replace(',', '').str.strip().str.replace('.0', '')  # Limpiar la contraseña
 
 # Función para verificar las credenciales y obtener los datos del usuario
 def verify_login(celular, contraseña):
