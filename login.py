@@ -61,6 +61,7 @@ with st.sidebar:
             st.session_state.hechos = hechos
             st.session_state.metas = metas
             st.session_state.nivel = nivel
+            st.session_state.nivel = 
             st.success("¡Inicio de sesión exitoso!")
         else:
             st.error("Número de celular o contraseña incorrectos.")
